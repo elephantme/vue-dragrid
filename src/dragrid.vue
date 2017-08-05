@@ -21,6 +21,8 @@
   import eventHandler from './event';
   import cache from './cache';
 
+  import service from './service';
+
   export default {
     name: 'dragrid',
 
@@ -46,6 +48,10 @@
         return cfg;
       },
 
+      area() {
+        return service.getArea(this.nodes);
+      },
+
       currentNode() {
         if(!this.current) return null;
         return this.nodes.find(n => n.id === this.current);
@@ -59,6 +65,55 @@
           height: node.h * this.cfg.cellH + 'px',
           transform: "translate("+ node.x * this.cfg.cellW +"px, "+ node.y * this.cfg.cellH +"px)"
         };
+      },
+
+      /**
+       * 重新布局
+       * 只要有一个节点发生变化，就要重新进行排版布局
+       */
+      layout() {
+        this.nodes.forEach(n => {
+          const y = this.moveup(n);
+          if(y < n.y){
+            n.y = y;
+          }
+        });
+      },
+
+      // 向上查找节点可以冒泡到的位置
+      moveup(node) {
+        let area = this.area;
+        for(let row = node.y - 1; row > 0; row--){
+          // 如果一整行都为空，则直接继续往上找
+          if(area[row] === undefined) continue;
+          for(let col = node.x; col < node.x + node.w; col++){
+            // 改行如果有内容，则直接返回下一行
+            if(area[row][col] !== undefined){
+              return row + 1;
+            }
+          }
+        }
+        return 0;
+      },
+
+    },
+
+    watch: {
+      nodes: {
+        handler() {
+          this.layout();
+        },
+        deep: true
+      },
+
+      // 只是为了打印看日志
+      area() {
+        let str = "[\n";
+        this.area.forEach(a => {
+          str += JSON.stringify(a) + "\n";
+        });
+        str += "]";
+        console.log(str);
       }
     }
   };

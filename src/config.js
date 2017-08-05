@@ -8,4 +8,10 @@ export const nodes = [{
   y: 0,
   w: 8,
   h: 6
+}, {
+  id: "2",
+  x: 0,
+  y: 6,
+  w: 8,
+  h: 6
 }];
