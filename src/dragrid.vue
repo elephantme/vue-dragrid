@@ -1,8 +1,10 @@
 <template>
-  <div class="dragrid">
+  <div class="dragrid" :name="name" :class="{'drag': current != ''}">
     <div 
       class="dragrid-item" 
       v-for="node of nodes"
+      :dg-id="node.id"
+      :class="{'dragrid-placeholder': node.id === current}"
       :style="getStyle(node)">
       <div class="dragrid-item-content">
         
@@ -10,19 +12,29 @@
       <div class="dragrid-drag-bar"></div>
       <div class="dragrid-resize-bar"></div>
     </div>
+    <div class="dragrid-dragdrop"></div>
   </div>
 </template>
 
 <script>
   import {config, nodes} from './config';
+  import eventHandler from './event';
+  import cache from './cache';
 
   export default {
     name: 'dragrid',
 
+    created() {
+      eventHandler.init(this);
+      cache.set(this.name, this);
+    },
+
     data() {
       return {
+        name: 'dragrid',
         containerWidth: 960,
-        nodes: nodes
+        nodes: nodes,
+        current: ""
       };
     },
 
@@ -48,30 +60,39 @@
 </script>
 
 <style>
+  * {
+    box-sizing: border-box;
+  }
+
   .dragrid{
     position: relative;
+    user-select: none;
   }
 
   .dragrid-item{
     position: absolute;
-    width:320px;
-    height: 320px;
+    padding: 5px;
+  }
+
+  .dragrid-item.current {
+    background: #111;
   }
 
   .dragrid-item-content{
-    margin: 5px;
+    width: 100%;
     height: 100%;
-    background: #ccc;
+    background: #AAC814;
   }
 
   .dragrid-drag-bar{
     position: absolute;
     width: 40px;
     height: 20px;
-    top: 0;
+    top: 5px;
     background-color: #999;
     left: 50%;
-    transform: translate(-20px, 5px);
+    /*transform: translate(-20px, 5px);*/
+    margin-left: -20px;
     border-radius: 0 0 20px 20px;
     cursor: move;
   }
@@ -80,11 +101,31 @@
     position: absolute;
     width: 0px;
     height: 0px;
-    bottom: -5px;
+    bottom: 5px;
     right: 5px;
     border-left: 30px solid transparent;
-    border-top: 30px solid transparent;
     border-bottom: 30px solid #999;
     cursor: se-resize;
+  }
+
+  .dragrid-placeholder:before{
+    z-index: 1;
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    bottom: 5px;
+    right: 5px;
+    background: #ccc;
+  }
+
+  .dragrid-dragdrop{
+    position: absolute;
+    display: none;
+  }
+
+  .drag .dragrid-dragdrop{
+    display: block;
+    padding: 5px;
   }
 </style>

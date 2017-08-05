@@ -11,6 +11,7 @@ module.exports = {
     publicPath: '/',
     filename: '[name].[hash:8].js'
   },
+  devtool: 'source-map',
   module: {
     rules: [
       // vue
