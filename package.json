@@ -4,11 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "webpack-dev-server --port=7777",
+    "build": "rm -rf ./dist && webpack --bail"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "webpack": "^3.4.1"
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.5.2",
+    "css-loader": "^0.28.4",
+    "html-webpack-plugin": "^2.29.0",
+    "vue-loader": "^13.0.0",
+    "vue-template-compiler": "^2.3.4",
+    "webpack": "^3.0.0",
+    "webpack-dev-server": "^2.5.0"
+  },
+  "dependencies": {
+    "vue": "^2.4.2"
   }
 }
