@@ -1,7 +1,7 @@
 <template>
   <div class="dragrid" :name="name" :class="{'drag': current != ''}">
     <div 
-      class="dragrid-item" 
+      class="dragrid-item dragrid-animate" 
       v-for="node of nodes"
       :dg-id="node.id"
       :class="{'dragrid-placeholder': node.id === current}"
@@ -44,6 +44,11 @@
         cfg.cellW = Math.floor(this.containerWidth / cfg.col);
         cfg.cellH = cfg.cellW; // 1:1
         return cfg;
+      },
+
+      currentNode() {
+        if(!this.current) return null;
+        return this.nodes.find(n => n.id === this.current);
       }
     },
 
@@ -76,6 +81,10 @@
 
   .dragrid-item.current {
     background: #111;
+  }
+
+  .dragrid-animate{
+    transition: transform .2s;
   }
 
   .dragrid-item-content{

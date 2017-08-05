@@ -51,6 +51,7 @@ const eventHandler = {
   },
 
   onMouseUp(event){
+    if(!eventHandler.drag) return;
     delete eventHandler.pageX;
     delete eventHandler.pageY;
     delete eventHandler.drag;

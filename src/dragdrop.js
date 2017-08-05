@@ -33,14 +33,29 @@ export default {
   },
 
   drag(event) {
+    const opt = this.dragrid.cfg;
     const pageX = event.pageX, pageY = event.pageY;
 
-    const x = pageX - this.containerOffset.left - this.offsetX,
-          y = pageY - this.containerOffset.top - this.offsetY;
+    let x = pageX - this.containerOffset.left - this.offsetX,
+        y = pageY - this.containerOffset.top - this.offsetY;
 
-    console.log(x, y)
+    x = Math.max(x, 0);
+    y = Math.max(y, 0);
 
+    // 移动拖拽节点
     this.dragElement.style.cssText += ';transform:translate('+ x +'px, '+ y +'px)';
+
+    // 坐标转换
+    const nodeX = Math.round(x / opt.cellW);
+    const nodeY = Math.round(y / opt.cellH);
+
+    let currentNode = this.dragrid.currentNode;
+
+    // 发生移动
+    if(currentNode.x !== nodeX || currentNode.y !== nodeY) {
+        currentNode.x = nodeX;
+        currentNode.y = nodeY;
+    }
   },
 
   dragEnd() {
