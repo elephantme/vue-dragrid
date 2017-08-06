@@ -1,19 +1,22 @@
 <template>
-  <div class="dragrid" :name="name" :class="{'drag': current != ''}">
-    <div 
-      class="dragrid-item dragrid-animate" 
-      v-for="node of nodes"
-      :dg-id="node.id"
-      :class="{'dragrid-placeholder': node.id === current}"
-      :style="getStyle(node)">
-      <div class="dragrid-item-content">
-        
+  <div class="dragrid-wrapper">
+    <div class="dragrid" :name="name" :class="{'drag': current != ''}">
+      <div 
+        class="dragrid-item dragrid-animate" 
+        v-for="node of nodes"
+        :dg-id="node.id"
+        :class="{'dragrid-placeholder': node.id === current}"
+        :style="getStyle(node)">
+        <div class="dragrid-item-content">
+          
+        </div>
+        <div class="dragrid-drag-bar"></div>
+        <div class="dragrid-resize-bar"></div>
       </div>
-      <div class="dragrid-drag-bar"></div>
-      <div class="dragrid-resize-bar"></div>
+      <div class="dragrid-dragdrop"></div>
     </div>
-    <div class="dragrid-dragdrop"></div>
   </div>
+  
 </template>
 
 <script>
@@ -138,6 +141,12 @@
 </script>
 
 <style>
+  .dragrid-wrapper{
+    width: 960px;
+    border: 1px solid #ccc;
+    margin: 0 auto;
+    height: 100%;
+  }
   * {
     box-sizing: border-box;
   }
@@ -157,7 +166,7 @@
   }
 
   .dragrid-animate{
-    transition: transform .2s;
+    transition: transform .2s, width .2s, height .2s;
   }
 
   .dragrid-item-content{
@@ -181,12 +190,17 @@
 
   .dragrid-resize-bar{
     position: absolute;
-    width: 0px;
+    /*width: 0px;
     height: 0px;
     bottom: 5px;
     right: 5px;
     border-left: 30px solid transparent;
-    border-bottom: 30px solid #999;
+    border-bottom: 30px solid #999;*/
+    width: 30px;
+    height: 30px;
+    bottom: 5px;
+    right: 5px;
+    background: #999;
     cursor: se-resize;
   }
 

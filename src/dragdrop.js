@@ -2,7 +2,7 @@ import utils from './utils';
 import cache from './cache';
 
 export default {
-  dragStart(el, offsetX, offsetY) {
+  dragStart(el, offsetX, offsetY, isResize) {
     // 要拖拽的节点
     const dragNode = utils.searchUp(el, 'dragrid-item');
     // 容器
@@ -26,13 +26,20 @@ export default {
     // 缓存数据
     this.offsetX = offset.offsetX;
     this.offsetY = offset.offsetY;
+    
     this.dragrid = instance;
     this.dragElement = dragdrop;
     this.dragContainer = dragContainer;
     this.containerOffset = containerOffset;
+    this.isResize = isResize;
+    this.currentNode = Object.assign({}, instance.currentNode);
   },
 
   drag(event) {
+    this.isResize ? this.resize(event) : this.position(event);
+  },
+
+  position(event) {
     const opt = this.dragrid.cfg;
     const pageX = event.pageX, pageY = event.pageY;
 
@@ -59,6 +66,40 @@ export default {
     }
   },
 
+  resize(event) {
+    const opt = this.dragrid.cfg;
+
+    // 之前
+    const x1 = this.currentNode.x * opt.cellW + this.offsetX,
+        y1 = this.currentNode.y * opt.cellH + this.offsetY;
+    // 之后
+    const x2 = event.pageX - this.containerOffset.left,
+        y2 = event.pageY - this.containerOffset.top;
+    // 偏移
+    const dx = x2 - x1, dy = y2 - y1;
+    // 新的节点宽和高
+    const w = this.currentNode.w * opt.cellW + dx,
+        h = this.currentNode.h * opt.cellH + dy;
+
+    // 样式设置
+    this.dragElement.style.cssText += ';width:' + w + 'px;height:' + h + 'px;';
+
+    // 坐标转换
+    const nodeW = Math.round(w / opt.cellW);
+    const nodeH = Math.round(h / opt.cellH);
+
+    console.log(nodeW, nodeH)
+
+    let currentNode = this.dragrid.currentNode;
+
+    // 发生移动
+    if(currentNode.w !== nodeW || currentNode.h !== nodeH) {
+        currentNode.w = nodeW;
+        currentNode.h = nodeH;
+        this.dragrid.overlap(currentNode);
+    }
+  },
+
   dragEnd() {
     this.dragrid.current = "";
 
@@ -68,5 +109,6 @@ export default {
     this.dragElement = null;
     this.dragContainer = null;
     this.containerOffset = null;
+    this.currentNode = null;
   }
 };

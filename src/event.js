@@ -14,23 +14,22 @@ const eventHandler = {
   },
 
   bindEvents() {
-    console.log('bind')
     document.addEventListener('mousedown', this.onMouseDown);
     document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
   },
 
   onMouseDown(event){
-    
     const isOnDrag = !!event.target.classList.contains('dragrid-drag-bar');
-    if(isOnDrag) {
-      console.log('down');
+    const isOnResize = !!event.target.classList.contains('dragrid-resize-bar');
+    console.log(event)
+    if(isOnDrag || isOnResize) {
       eventHandler.pageX = event.pageX;
       eventHandler.pageY = event.pageY;
       eventHandler.el = event.target;
       eventHandler.offsetX = event.offsetX;
       eventHandler.offsetY = event.offsetY;
-      console.log(event, event.offsetX)
+      eventHandler.isResize = isOnResize;
     }
     
   },
@@ -45,20 +44,22 @@ const eventHandler = {
     }
 
     if(eh.isDrag(eh.pageX, eh.pageY, event.pageX, event.pageY)) {
-      dragdrop.dragStart(eh.el, eh.offsetX, eh.offsetY);
+      console.log('isDrag')
+      dragdrop.dragStart(eh.el, eh.offsetX, eh.offsetY, eh.isResize);
       eh.drag = true;
     }
   },
 
   onMouseUp(event){
-    if(!eventHandler.drag) return;
+    if(eventHandler.drag){
+      dragdrop.dragEnd();
+    }
     delete eventHandler.pageX;
     delete eventHandler.pageY;
     delete eventHandler.drag;
     eventHandler.el = null;
     delete eventHandler.el;
-
-    dragdrop.dragEnd();
+    delete eventHandler.isResize;
   },
 
   isDrag(pageXFrom, pageYFrom, pageXTo, pageYTo){
