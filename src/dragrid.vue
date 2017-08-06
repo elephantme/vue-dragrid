@@ -109,10 +109,20 @@
       },
 
       overlap(node) {
+        let offsetUpY = 0;
+
+        // 碰撞检测，查找一起碰撞节点里面，位置最靠上的那个
+        this.nodes.forEach(n => {
+          if(node !== n && this.checkHit(node, n)){
+            const value = node.y - n.y;
+            offsetUpY = value > offsetUpY ? value : offsetUpY;
+          }
+        });
+
         // 下移节点
         this.nodes.forEach(n => {
           if(node !== n && n.y + n.h > node.y) {
-            n.y += node.h;
+            n.y += (node.h + offsetUpY);
           }
         });
       }
@@ -122,19 +132,10 @@
     watch: {
       nodes: {
         handler() {
+          console.log(JSON.stringify(this.nodes));
           this.layout();
         },
         deep: true
-      },
-
-      // 只是为了打印看日志
-      area() {
-        let str = "[\n";
-        this.area.forEach(a => {
-          str += JSON.stringify(a) + "\n";
-        });
-        str += "]";
-        console.log(str);
       }
     }
   };
