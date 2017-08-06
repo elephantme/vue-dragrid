@@ -55,6 +55,7 @@ export default {
     if(currentNode.x !== nodeX || currentNode.y !== nodeY) {
         currentNode.x = nodeX;
         currentNode.y = nodeY;
+        this.dragrid.overlap(currentNode)
     }
   },
 

@@ -96,6 +96,24 @@
         return 0;
       },
 
+      // 检测两个节点是否发生碰撞
+      checkHit(node1, node2){
+        if(node1.x < node2.x + node2.w && node2.x < node1.x + node1.w &&
+          node1.y < node2.y + node2.h && node2.y < node1.y + node1.h)
+          return true;
+
+        return false;
+      },
+
+      overlap(node) {
+        // 下移节点
+        this.nodes.forEach(n => {
+          if(node !== n && n.y + n.h > node.y) {
+            n.y += node.h;
+          }
+        });
+      }
+
     },
 
     watch: {
@@ -191,5 +209,6 @@
   .drag .dragrid-dragdrop{
     display: block;
     padding: 5px;
+    opacity: .8;
   }
 </style>
