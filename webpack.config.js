@@ -7,7 +7,7 @@ module.exports = {
     app: './index.js'
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'docs'),
     publicPath: '/',
     filename: '[name].[hash:8].js'
   },
@@ -30,8 +30,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       chunks: ['app'],
-      filename: 'index.html',
-      template: '../index.html',
+      filename: './index.html',
+      template: '../index.tpl.html',
       inject: 'body'
     })
   ]

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --port=7777",
-    "build": "rm -rf ./dist && webpack --bail"
+    "build": "rm -rf ./docs && webpack --bail"
   },
   "author": "",
   "license": "ISC",
